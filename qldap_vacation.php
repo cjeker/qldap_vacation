@@ -78,7 +78,7 @@ class qldap_vacation extends rcube_plugin
      $rcmail = rcmail::get_instance();
      $rcmail->output->set_pagetitle($this->gettext('changevacation'));
 
-     if (isset($_POST['_replytext']) {
+     if (isset($_POST['_replytext'])) {
        $this->_save();
      } else {
        $rcmail->output->command('display_message', $this->gettext('noreplytext'), 'error');
@@ -90,6 +90,8 @@ class qldap_vacation extends rcube_plugin
 
   function vacation_form()
   {
+    $rcmail = rcmail::get_instance();
+
     $table = new html_table(array('cols' => 2));
 
     $input_replytext = new html_textarea(array('name' => 'vacation_body', 'id' => 'vacation_body', 'cols' => 80, 'rows' => 16));
@@ -168,10 +170,11 @@ class qldap_vacation extends rcube_plugin
         $log = sprintf("Found the user '%s' in the database", $login);
 
 	$this->replytext = $info["0"][$this->attr_mailreplytext][0];
-        $deliverymodes = $info["0"][$this->attr_deliverymode]
+        $deliverymodes = $info["0"][$this->attr_deliverymode];
 	foreach ($deliverymodes as $mode) {
           if ($mode == "reply") {
             $this->enabled = true;
+	  }
         }
       } else {
         $log = sprintf("Unique entry '%s' not found (pass 2). Filter: %s Count: %s", $login, $ldap_filter, $info['count'] );
