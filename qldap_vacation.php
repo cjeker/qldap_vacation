@@ -81,7 +81,7 @@ class qldap_vacation extends rcube_plugin
      $rcmail = rcmail::get_instance();
      $rcmail->output->set_pagetitle($this->gettext('changevacation'));
 
-     if (isset($_POST['_replytext'])) {
+     if (isset($_POST['vacation_body'])) {
        $this->_save();
      } else {
        $rcmail->output->command('display_message', $this->gettext('noreplytext'), 'error');
