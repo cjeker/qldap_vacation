@@ -1,16 +1,10 @@
-/* Show user-info plugin script */
+/**
+ * qldap_vacation plugin JS code
+ */
+window.rcmail && rcmail.addEventListener('init', function(evt) {
+	rcmail.register_command('plugin.qldap_vacation-save', function() {
+		rcmail.gui_objects.vacationform.submit();
+	}, true);
 
-if (window.rcmail) {
-  rcmail.addEventListener('init', function(evt) {
-    // <span id="settingstabdefault" class="tablink"><roundcube:button command="preferences" type="link" label="preferences" title="editpreferences" /></span>
-    var tab = $('<span>').attr('id', 'settingstabpluginuserinfo').addClass('tablink');
-    
-    var button = $('<a>').attr('href', rcmail.env.comm_path+'&_action=plugin.userinfo').html(rcmail.gettext('userinfo', 'userinfo')).appendTo(tab);
-    button.bind('click', function(e){ return rcmail.command('plugin.userinfo', this) });
-    
-    // add button and register command
-    rcmail.add_element(tab, 'tabs');
-    rcmail.register_command('plugin.userinfo', function(){ rcmail.goto_url('plugin.userinfo') }, true);
-  })
-}
-
+	$('input:not(:hidden):first').focus();
+});
