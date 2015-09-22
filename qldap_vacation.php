@@ -198,16 +198,40 @@ class qldap_vacation extends rcube_plugin
     $email = $rcmail->user->get_identity()['email'];
     $conn = $this->_connect();
 
-    $replytext = $_POST['vacation_replytext'];
+    $replytext = $_POST['vacation_body'];
     $enabled = $_POST['vacation_enabled'];
 
-    $succ = ldap_modify($conn, $dn, [ $this->attr_mailreplytext => [ $this->replytext ] ]);
-    if (! $succ ) {
-      $log = sprintf("Failed to update %s: %s", $this->attr_mailreplytext, ldap_errno($conn));
+    $ldap_filter = str_replace('%email', $email, $this->filter);
+    $result = ldap_search($conn, $this->base_dn, $ldap_filter, $this->fields);
+    if ( $result )
+      $info = ldap_get_entries($conn, $result);
+
+    if (!$result || $info['count'] < 1) {
+      $log = sprintf("Write: entry '%s' not found. Filter: %s Count: %s", $email, $ldap_filter, $info['count'] );
+      write_log('qldap_vacation', $log);
+      ldap_close($conn);
+      return false;
     }
 
-    $attrs = array( $this->attr_deliverymode => [ 'reply' ]);
-    if ( $succ && $enabled != $this->enabled ) {
+    $dn = $info["0"]["dn"];
+    $was_enabled = false;
+    $deliverymodes = $info["0"][$this->attr_deliverymode];
+    foreach ($deliverymodes as $mode) {
+      if ($mode == "reply") {
+        $was_enabled = true;
+      }
+    }
+
+    $succ = ldap_modify($conn, $dn, [ $this->attr_mailreplytext => [ $replytext ] ]);
+    if (! $succ ) {
+      $log = sprintf("Failed to update dn %s attr %s to %s: %s", $dn, $this->attr_mailreplytext, $replytext, ldap_errno($conn));
+      write_log('qldap_vacation', $log);
+      ldap_close($conn);
+      return false;
+    }
+
+    if ($enabled != $was_enabled) {
+      $attrs = array( $this->attr_deliverymode => [ 'reply' ]);
       if ( $enabled ) {
         $succ = ldap_mod_add($conn, $dn, $attrs);
       } else {
@@ -215,14 +239,15 @@ class qldap_vacation extends rcube_plugin
       }
       if (! $succ ) {
         $log = sprintf("Failed to update %s: %s", $this->attr_deliverymode, ldap_errno($conn));
+        write_log('qldap_vacation', $log);
+        ldap_close($conn);
+        return false;
       }
     }
-    if ( $succ ) {
-      $log = "Succeeded to update LDAP";
-    }
-    write_log('qldap_vacaction', $log);
+    $log = "Succeeded to update LDAP";
+    write_log('qldap_vacation', $log);
     ldap_close($conn);
-    return $succ ? true : false;
+    return true;
   }
 }
 ?>
