@@ -172,7 +172,6 @@ class qldap_vacation extends rcube_plugin
       $info = ldap_get_entries($conn, $result);
 
       if ( $info['count'] >= 1 ) {
-        $log = sprintf("Found the user '%s' in the database", $login);
 
 	$this->replytext = $info["0"][$this->attr_mailreplytext][0];
         $deliverymodes = $info["0"][$this->attr_deliverymode];
@@ -181,14 +180,15 @@ class qldap_vacation extends rcube_plugin
             $this->enabled = true;
 	  }
         }
-      } else {
-        $log = sprintf("Unique entry '%s' not found (pass 2). Filter: %s Count: %s", $login, $ldap_filter, $info['count'] );
+        $log = sprintf("Found the user '%s' in the database", $email);
+        write_log('qldap_vacation', $log);
+        ldap_close($conn);
+	return;
       }
-    } else {
-        $log = sprintf("Unique entry '%s' not found (pass 1). Filter: %s", $login, $ldap_filter);
     }
-    write_log('qldap_vacaction', $log);
 
+    $log = sprintf("Unique entry '%s' not found. Filter: %s Count: %s", $email, $ldap_filter, $info['count'] );
+    write_log('qldap_vacation', $log);
     ldap_close($conn);
   }
 
