@@ -94,6 +94,8 @@ class qldap_vacation extends rcube_plugin
   function vacation_form()
   {
     $rcmail = rcmail::get_instance();
+    // load the actuall data
+    $this->_load();
 
     $table = new html_table(array('cols' => 2));
 
