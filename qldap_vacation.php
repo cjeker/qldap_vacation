@@ -6,7 +6,8 @@ class qldap_vacation extends rcube_plugin
   public $noajax  = true;
   public $noframe = true;
 
-  // LDAP parameters
+  // LDAP config parameters
+  private $config;
   private $ldap;
   private $server;
   private $bind_dn;
@@ -23,6 +24,7 @@ class qldap_vacation extends rcube_plugin
   function init()
   {
     $this->load_config();
+    $this->config = rcmail::get_instance()->config->get('qldap_vacation');
 
     // Load LDAP config
     $this->ldap      = $this->config['ldap'];
