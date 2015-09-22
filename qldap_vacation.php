@@ -34,8 +34,9 @@ class qldap_vacation extends rcube_plugin
     $this->base_dn   = $this->ldap['base_dn'];
     $this->filter    = $this->ldap['filter'];
 
-    $this->attr_mailreplytext = $this->ldap['mailreplytext'];
-    $this->attr_deliverymode  = $this->ldap['deliverymode'];
+    // attribute names need to be lowercase for the LDAP api
+    $this->attr_mailreplytext = strtolower($this->ldap['mailreplytext']);
+    $this->attr_deliverymode  = strtolower($this->ldap['deliverymode']);
     $this->fields = array($this->attr_mailreplytext, $this->attr_deliverymode);
 
     $this->replytext = '';
