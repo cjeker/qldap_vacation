@@ -145,13 +145,13 @@ class qldap_vacation extends rcube_plugin
       }
       if (! $bound ) {
         $log = sprintf("Bind to server '%s' failed. Con: (%s), Error: (%s)",
-          $this->server, $this->conn, ldap_errno($conn));
+          $this->server, $this->conn, ldap_error($conn));
         write_log('qldap_vacation', $log);
         ldap_close($conn);
 	return false;
       }
     } else {
-      $log = sprintf("Connection to the server failed: (Error=%s)", ldap_errno($conn));
+      $log = sprintf("Connection to the server failed: (Error=%s)", ldap_error($conn));
       write_log('qldap_vacation', $log);
       ldap_close($conn);
       return false;
@@ -224,7 +224,7 @@ class qldap_vacation extends rcube_plugin
 
     $succ = ldap_modify($conn, $dn, [ $this->attr_mailreplytext => [ $replytext ] ]);
     if (! $succ ) {
-      $log = sprintf("Failed to update dn %s attr %s to %s: %s", $dn, $this->attr_mailreplytext, $replytext, ldap_errno($conn));
+      $log = sprintf("Failed to update dn %s attr %s to %s: %s", $dn, $this->attr_mailreplytext, $replytext, ldap_error($conn));
       write_log('qldap_vacation', $log);
       ldap_close($conn);
       return false;
@@ -238,7 +238,7 @@ class qldap_vacation extends rcube_plugin
         $succ = ldap_mod_del($conn, $dn, $attrs);
       }
       if (! $succ ) {
-        $log = sprintf("Failed to update %s: %s", $this->attr_deliverymode, ldap_errno($conn));
+        $log = sprintf("Failed to update %s: %s", $this->attr_deliverymode, ldap_error($conn));
         write_log('qldap_vacation', $log);
         ldap_close($conn);
         return false;
