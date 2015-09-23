@@ -19,7 +19,7 @@ class qldap_vacation extends rcube_plugin
   private $attr_deliverymode;
 
   private $replytext;
-  private $enabled;
+  private $enable;
 
   function init()
   {
@@ -40,7 +40,7 @@ class qldap_vacation extends rcube_plugin
     $this->fields = array($this->attr_mailreplytext, $this->attr_deliverymode);
 
     $this->replytext = '';
-    $this->enabled = false;
+    $this->enable = false;
 
     $this->add_texts('localization/');
 
@@ -107,7 +107,7 @@ class qldap_vacation extends rcube_plugin
     $table->add('', $input_replytext->show($this->replytext));
 
     $table->add('title', html::label($field_id, rcube::Q($this->gettext('vacation_enable'))));
-    $table->add('', $input_checkbox->show($this->enabled ? 1 : 0));
+    $table->add('', $input_checkbox->show($this->enable ? 1 : 0));
     
     $out = html::div(array('class' => 'box'),
       html::div(array('id' => 'prefs-title', 'class' => 'boxtitle'), $this->gettext('changevacation')) .
@@ -177,7 +177,7 @@ class qldap_vacation extends rcube_plugin
         $deliverymodes = $info["0"][$this->attr_deliverymode];
 	foreach ($deliverymodes as $mode) {
           if ($mode == "reply") {
-            $this->enabled = true;
+            $this->enable = true;
 	  }
         }
         $log = sprintf("Found the user '%s' in the database", $email);
@@ -199,7 +199,7 @@ class qldap_vacation extends rcube_plugin
     $conn = $this->_connect();
 
     $replytext = $_POST['vacation_body'];
-    $enabled = $_POST['vacation_enabled'];
+    $enable = $_POST['vacation_enable'];
 
     $ldap_filter = str_replace('%email', $email, $this->filter);
     $result = ldap_search($conn, $this->base_dn, $ldap_filter, $this->fields);
@@ -230,9 +230,9 @@ class qldap_vacation extends rcube_plugin
       return false;
     }
 
-    if ($enabled != $was_enabled) {
+    if ($enable != $was_enabled) {
       $attrs = array( $this->attr_deliverymode => [ 'reply' ]);
-      if ( $enabled ) {
+      if ( $enable ) {
         $succ = ldap_mod_add($conn, $dn, $attrs);
       } else {
         $succ = ldap_mod_del($conn, $dn, $attrs);
