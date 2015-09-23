@@ -148,7 +148,7 @@ class qldap_vacation extends rcube_plugin
           $this->server, $this->conn, ldap_error($conn));
         write_log('qldap_vacation', $log);
         ldap_close($conn);
-	return false;
+        return false;
       }
     } else {
       $log = sprintf("Connection to the server failed: (Error=%s)", ldap_error($conn));
@@ -173,19 +173,19 @@ class qldap_vacation extends rcube_plugin
 
       if ( $info['count'] >= 1 ) {
 
-	$this->replytext = $info["0"][$this->attr_mailreplytext][0];
+        $this->replytext = $info["0"][$this->attr_mailreplytext][0];
         $deliverymodes = $info["0"][$this->attr_deliverymode];
-	if (is_array($deliverymodes)) {
-	  foreach ($deliverymodes as $mode) {
+        if (is_array($deliverymodes)) {
+          foreach ($deliverymodes as $mode) {
             if ($mode == "reply") {
               $this->enable = true;
-	    }
+            }
           }
-	}
+        }
         $log = sprintf("Found the user '%s' in the database", $email);
         write_log('qldap_vacation', $log);
         ldap_close($conn);
-	return;
+        return;
       }
     }
 
