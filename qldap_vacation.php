@@ -175,11 +175,13 @@ class qldap_vacation extends rcube_plugin
 
 	$this->replytext = $info["0"][$this->attr_mailreplytext][0];
         $deliverymodes = $info["0"][$this->attr_deliverymode];
-	foreach ($deliverymodes as $mode) {
-          if ($mode == "reply") {
-            $this->enable = true;
-	  }
-        }
+	if (is_array($deliverymodes)) {
+	  foreach ($deliverymodes as $mode) {
+            if ($mode == "reply") {
+              $this->enable = true;
+	    }
+          }
+	}
         $log = sprintf("Found the user '%s' in the database", $email);
         write_log('qldap_vacation', $log);
         ldap_close($conn);
@@ -216,12 +218,13 @@ class qldap_vacation extends rcube_plugin
     $dn = $info["0"]["dn"];
     $was_enabled = false;
     $deliverymodes = $info["0"][$this->attr_deliverymode];
-    foreach ($deliverymodes as $mode) {
-      if ($mode == "reply") {
-        $was_enabled = true;
+    if (is_array($deliverymodes)) {
+      foreach ($deliverymodes as $mode) {
+        if ($mode == "reply") {
+          $was_enabled = true;
+        }
       }
     }
-
     $succ = ldap_modify($conn, $dn, [ $this->attr_mailreplytext => [ $replytext ] ]);
     if (! $succ ) {
       $log = sprintf("Failed to update dn %s attr %s to %s: %s", $dn, $this->attr_mailreplytext, $replytext, ldap_error($conn));
