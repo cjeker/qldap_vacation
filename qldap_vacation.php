@@ -42,7 +42,7 @@ class qldap_vacation extends rcube_plugin
     $this->replytext = '';
     $this->enable = false;
 
-    $this->add_texts('localization/');
+    $this->add_texts('localization/', true);
 
     $this->add_hook('settings_actions', array($this, 'settings_actions'));
 
@@ -57,8 +57,8 @@ class qldap_vacation extends rcube_plugin
     $args['actions'][] = array(
       'action' => 'plugin.qldap_vacation',
       'class'  => 'qldap_vacation',
-      'label'  => 'qldap_vacation',
-      'title'  => 'vacation',
+      'label'  => 'qldap_vacation.qldapvacation',
+      'title'  => 'qldap_vacation.vacation',
       'domain' => 'vacation',
     );
 
