@@ -1,11 +1,10 @@
 <?php
 
-$labels = array();
+$labels['qldapvacation']  = 'Vacation message';
 $labels['changevacation']  = 'Change vacation settings';
-$labels['vacation_replytext'] = 'Vacation messages';
+$labels['vacation_replytext'] = 'Vacation message';
 $labels['vacation_enable'] = 'Enable vacation';
 
-$messages = array();
 $messages['noreplytext'] = 'Please input a vacation message.';
 
 ?>
