@@ -146,13 +146,13 @@ class qldap_vacation extends rcube_plugin
       if (! $bound ) {
         $log = sprintf("Bind to server '%s' failed. Con: (%s), Error: (%s)",
           $this->server, $this->conn, ldap_error($conn));
-        write_log('qldap_vacation', $log);
+        rcmail::write_log('qldap_vacation', $log);
         ldap_close($conn);
         return false;
       }
     } else {
       $log = sprintf("Connection to the server failed: (Error=%s)", ldap_error($conn));
-      write_log('qldap_vacation', $log);
+      rcmail::write_log('qldap_vacation', $log);
       ldap_close($conn);
       return false;
     }
@@ -183,14 +183,14 @@ class qldap_vacation extends rcube_plugin
           }
         }
         $log = sprintf("Found the user '%s' in the database", $email);
-        write_log('qldap_vacation', $log);
+        rcmail::write_log('qldap_vacation', $log);
         ldap_close($conn);
         return;
       }
     }
 
     $log = sprintf("Unique entry '%s' not found. Filter: %s Count: %s", $email, $ldap_filter, $info['count'] );
-    write_log('qldap_vacation', $log);
+    rcmail::write_log('qldap_vacation', $log);
     ldap_close($conn);
   }
 
@@ -210,7 +210,7 @@ class qldap_vacation extends rcube_plugin
 
     if (!$result || $info['count'] < 1) {
       $log = sprintf("Write: entry '%s' not found. Filter: %s Count: %s", $email, $ldap_filter, $info['count'] );
-      write_log('qldap_vacation', $log);
+      rcmail::write_log('qldap_vacation', $log);
       ldap_close($conn);
       return false;
     }
@@ -228,7 +228,7 @@ class qldap_vacation extends rcube_plugin
     $succ = ldap_modify($conn, $dn, [ $this->attr_mailreplytext => [ $replytext ] ]);
     if (! $succ ) {
       $log = sprintf("Failed to update dn %s attr %s to %s: %s", $dn, $this->attr_mailreplytext, $replytext, ldap_error($conn));
-      write_log('qldap_vacation', $log);
+      rcmail::write_log('qldap_vacation', $log);
       ldap_close($conn);
       return false;
     }
@@ -242,13 +242,13 @@ class qldap_vacation extends rcube_plugin
       }
       if (! $succ ) {
         $log = sprintf("Failed to update %s: %s", $this->attr_deliverymode, ldap_error($conn));
-        write_log('qldap_vacation', $log);
+        rcmail::write_log('qldap_vacation', $log);
         ldap_close($conn);
         return false;
       }
     }
     $log = "Succeeded to update LDAP";
-    write_log('qldap_vacation', $log);
+    rcmail::write_log('qldap_vacation', $log);
     ldap_close($conn);
     return true;
   }
