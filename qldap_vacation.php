@@ -103,10 +103,10 @@ class qldap_vacation extends rcube_plugin
     $input_checkbox = new html_checkbox(array('name' => 'vacation_enable', 'id' => 'vaction_enable', 'value' => 1))
 ;
 
-    $table->add('title', html::label($field_id, rcube::Q($this->gettext('vacation_replytext'))));
+    $table->add('title', html::label('vacation_body', rcube::Q($this->gettext('vacation_replytext'))));
     $table->add('', $input_replytext->show($this->replytext));
 
-    $table->add('title', html::label($field_id, rcube::Q($this->gettext('vacation_enable'))));
+    $table->add('title', html::label('vaction_enable', rcube::Q($this->gettext('vacation_enable'))));
     $table->add('', $input_checkbox->show($this->enable ? 1 : 0));
     
     $out = html::div(array('class' => 'box'),
