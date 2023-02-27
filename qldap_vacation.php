@@ -68,12 +68,12 @@ class qldap_vacation extends rcube_plugin
   function vacation_init()
   {
     $this->register_handler('plugin.body', array($this, 'vacation_form'));
- 
+
     $rcmail = rcmail::get_instance();
     $rcmail->output->set_pagetitle($this->gettext('changevacation'));
     $rcmail->output->send('plugin');
   }
-  
+
   function vacation_save()
   {
      $this->register_handler('plugin.body', array($this, 'vacation_form'));
@@ -93,7 +93,7 @@ class qldap_vacation extends rcube_plugin
     // load the actuall data
     $this->_load();
 
-    $table = new html_table(array('cols' => 2));
+    $table = new html_table(array('cols' => 2, 'class' => 'propform'));
 
     $input_replytext = new html_textarea(array('name' => 'vacation_body', 'id' => 'vacation_body', 'cols' => 80, 'rows' => 16));
     $input_checkbox = new html_checkbox(array('name' => 'vacation_enable', 'id' => 'vaction_enable', 'value' => 1))
@@ -104,26 +104,27 @@ class qldap_vacation extends rcube_plugin
 
     $table->add('title', html::label('vaction_enable', rcube::Q($this->gettext('vacation_enable'))));
     $table->add('', $input_checkbox->show($this->enable ? 1 : 0));
-    
-    $out = html::div(array('class' => 'box'),
-      html::div(array('id' => 'prefs-title', 'class' => 'boxtitle'), $this->gettext('changevacation')) .
-      html::div(array('class' => 'boxcontent'), $table->show() .
-      html::p(null,
-        $rcmail->output->button(array(
-          'command' => 'plugin.qldap_vacation-save',
-          'type'    => 'input',
-          'class'   => 'button mainaction',
-          'label'   => 'save'
-      )))));
 
-    $rcmail->output->add_gui_object('vacationform', 'vacation-form');
-    
-    return $rcmail->output->form_tag(array(
+    $form = $rcmail->output->form_tag([
       'id'     => 'vacation-form',
       'name'   => 'vacation-form',
       'method' => 'post',
       'action' => './?_task=settings&_action=plugin.qldap_vacation-save',
-    ), $out);
+    ], $table->show());
+
+    $rcmail->output->add_gui_object('vacationform', 'vacation-form');
+
+    return html::div(['id' => 'prefs-title', 'class' => 'boxtitle'], $this->gettext('changevacation')) .
+      html::div([ 'class' => 'box formcontainer scroler'],
+	html::div(['class' => 'boxcontent formcontent'], $form) .
+        html::p(['class' => 'formbuttons footerleft'],
+          $rcmail->output->button([
+            'command' => 'plugin.qldap_vacation-save',
+            'class'   => 'button mainaction submit',
+            'label'   => 'save'
+	  ])
+        )
+      );
   }
 
   function _connect()
