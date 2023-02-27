@@ -1,5 +1,6 @@
 qldap_vacation
 ==============
+```
  * Copyright (c) 2015 Claudio Jeker <cjeker@diehard.n-r-g.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
@@ -13,6 +14,7 @@ qldap_vacation
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+```
 
 Roundcube Plugin for managing the qmail-ldap vacation settings in LDAP.
 
