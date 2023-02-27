@@ -197,8 +197,10 @@ class qldap_vacation extends rcube_plugin
     $email = $rcmail->user->get_identity()['email'];
     $conn = $this->_connect();
 
+    $enable = false;
+    if (isset($_POST['vacation_enable']))
+      $enable = $_POST['vacation_enable'];
     $replytext = $_POST['vacation_body'];
-    $enable = $_POST['vacation_enable'];
     if (! $replytext)
       $enable = false;
 
