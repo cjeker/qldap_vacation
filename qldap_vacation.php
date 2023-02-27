@@ -81,11 +81,7 @@ class qldap_vacation extends rcube_plugin
      $rcmail = rcmail::get_instance();
      $rcmail->output->set_pagetitle($this->gettext('changevacation'));
 
-     if (isset($_POST['vacation_body'])) {
-       $this->_save();
-     } else {
-       $rcmail->output->command('display_message', $this->gettext('noreplytext'), 'error');
-     }
+     $this->_save();
 
      $rcmail->overwrite_action('plugin.qldap_vacation');
      $rcmail->output->send('plugin');
@@ -202,6 +198,8 @@ class qldap_vacation extends rcube_plugin
 
     $replytext = $_POST['vacation_body'];
     $enable = $_POST['vacation_enable'];
+    if (! $replytext)
+      $enable = false;
 
     $ldap_filter = str_replace('%email', $email, $this->filter);
     $result = ldap_search($conn, $this->base_dn, $ldap_filter, $this->fields);
@@ -225,7 +223,11 @@ class qldap_vacation extends rcube_plugin
         }
       }
     }
-    $succ = ldap_modify($conn, $dn, [ $this->attr_mailreplytext => [ $replytext ] ]);
+
+    if (! $replytext)
+      $succ = ldap_mod_del($conn, $dn, [ $this->attr_mailreplytext => array() ]);
+    else
+      $succ = ldap_modify($conn, $dn, [ $this->attr_mailreplytext => [ $replytext ] ]);
     if (! $succ ) {
       $log = sprintf("Failed to update dn %s attr %s to %s: %s", $dn, $this->attr_mailreplytext, $replytext, ldap_error($conn));
       rcmail::write_log('qldap_vacation', $log);
