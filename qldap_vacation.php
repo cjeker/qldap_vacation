@@ -253,7 +253,7 @@ class qldap_vacation extends rcube_plugin
         return false;
       }
     }
-    $log = "Succeeded to update LDAP";
+    $log = sprintf("Succeeded to update LDAP dn %s", $dn);
     rcmail::write_log('qldap_vacation', $log);
     ldap_close($conn);
     return true;
