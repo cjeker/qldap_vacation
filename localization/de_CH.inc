@@ -7,4 +7,6 @@ $labels['vacation_enable'] = 'Abwesenheitsnotiz einschalten';
 
 $messages['noreplytext'] = 'Bitte Abwesenheitsnotiz einfuegen.';
 
+$messages['errorloadingdata'] = 'Abwesenheitsnotiz konnte nicht geladen werden.';
+
 ?>
