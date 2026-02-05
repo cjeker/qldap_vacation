@@ -132,7 +132,7 @@ class qldap_vacation extends rcube_plugin
     // LDAP Connection
     $conn = ldap_connect($this->server);
 
-    if ( is_resource($conn) ) {
+    if ($conn) {
       ldap_set_option($conn, LDAP_OPT_PROTOCOL_VERSION, 3);
       // anonymous bind will probably not work to modify entries but who knows...
       if ( $this->bind_dn ){
